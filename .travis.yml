@@ -11,7 +11,7 @@ deploy:
   provider: script
   script:
     docker push leandropldev/mysql-itaufilemanagerdb;
-    docker push leandropldev/itau-file-manager;
+    docker push leandropldev/itaufilemanager;
   on:
     branch: master
 notifications:
