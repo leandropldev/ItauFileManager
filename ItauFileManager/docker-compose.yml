@@ -14,7 +14,7 @@ services:
       - "3308:3306"
     networks:
       - itau-network
-  ItauFileManager:
+  itau-file-manager:
     image: leandropldev/itau-file-manager
     restart: always
     build: ./ItauFileManager
