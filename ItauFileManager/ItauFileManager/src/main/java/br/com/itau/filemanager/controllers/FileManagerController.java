@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.itau.filemanager.dto.UploadFileResponseDTO;
+import br.com.itau.filemanager.entitys.FileStoredEntity;
 import br.com.itau.filemanager.service.FileStorageService;
 
 @RestController
@@ -78,5 +80,18 @@ public class FileManagerController {
 				.contentType(MediaType.parseMediaType(contentType))
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
 				.body(resource);
+	}
+	
+	@PostMapping("/awsS3/uploadFiles/")
+	public ResponseEntity<List<FileStoredEntity>> uploadAwsS3File(@RequestParam("files") MultipartFile[] files) {
+		
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(fileStorageService.uploadS3Files(files));
+	}
+	
+	@GetMapping("/awsS3/getFiles")
+	public ResponseEntity<List<FileStoredEntity>> listAllAwsS3Files(){
+		List<FileStoredEntity> allAwsFiles = fileStorageService.getAllAwsFiles();
+		return ResponseEntity.ok(allAwsFiles);
 	}
 }
