@@ -14,6 +14,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import br.com.itau.filemanager.entitys.UploadedFileModel;
+import br.com.itau.filemanager.exceptions.FileStorageException;
 
 @Service
 public class S3Service {
@@ -49,7 +50,7 @@ public class S3Service {
 				UploadedFileModel uploadedFileModel = new UploadedFileModel(originalName, location, file.getContentType(), file.getSize());
 				uploadedFiles.add(uploadedFileModel);
 			} catch (Exception e) {
-				// TODO: handle exception
+				throw new FileStorageException("Erro ao enviar ficheiro para o AWS S3");
 			}
 		}
 		return uploadedFiles;

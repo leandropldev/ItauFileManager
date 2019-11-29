@@ -89,12 +89,22 @@ public class FileStorageService {
 	}
 	
 	public List<FileStoredEntity> uploadS3Files(MultipartFile[] files) {
+		
+		for (MultipartFile file : files) {
+			String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+			
+			if (fileName.contains("..")) {
+				throw new FileStorageException("Filename contains invalid path sequence: " + fileName);
+			}
+			if ("application/pdf".equals(file.getContentType())) {
+				throw new FileStorageException("PDF is not a valid format to upload!");
+			}
+		}
+		
 		List<UploadedFileModel> uploadedS3Files = s3Service.upload(files);
 		List<FileStoredEntity> fileStoredListEntity = new ArrayList<>();
 		
 		for (UploadedFileModel s3File : uploadedS3Files) {
-			
-			System.out.println("s3File.getLocation(): " + s3File.getLocation());
 			
 			FileStoredEntity fileStoredEntity = FileStoredEntity.builder()
 					.fileName(s3File.getNome())
